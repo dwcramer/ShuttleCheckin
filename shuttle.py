@@ -9,6 +9,8 @@ from flask import url_for
 from flask import escape
 from flask.ext.sqlalchemy import SQLAlchemy
 
+from datetime import date
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shuttle.db'
@@ -74,6 +76,12 @@ class ActualShuttleLeg(db.Model):
         self.status = status
         self.shuttle_leg = shuttle_leg
 
+@app.route('/checkins', methods=['GET'])
+def schedules():
+    dow_today = date.today().weekday()
+    to_san = ShuttleLeg.query.filter_by(week_day=dow_today, destination='Castle').all()
+    from_san = ShuttleLeg.query.filter_by(week_day=dow_today, origin='Castle').all()
+    return render_template('signin.html', {'to_san': to_san, 'from_san': from_san})
 
 @app.route('/checkins/<int:shuttle>', methods=['GET', 'POST'])
 def check_ins(shuttle):
