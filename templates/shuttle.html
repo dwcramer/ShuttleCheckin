@@ -91,38 +91,38 @@ $(document).ready(function()
         <label class="control-label">Departure Time</label>
         <div class="controls">
           <label class="radio north-pickup pickup">
-          <input type="radio" name="depart" id="optionsRadios1" value="option1" checked="checked">
+          <input type="radio" name="depart" value="7:15" checked="checked">
           <strong>7:15 AM</strong></strong> <span class="label label-success">Available</span> </label>
           <label class="radio north-pickup pickup">
-          <input type="radio" name="depart" id="optionsRadios2" value="option2">
+          <input type="radio" name="depart" value="7:30">
           <strong>7:30 AM</strong> <span class="label label-success">Available</span> </label>
           <label class="radio south-pickup pickup hide">
-          <input type="radio" name="depart" id="optionsRadios1" value="option1">
+          <input type="radio" name="depart" value="7:45">
           <strong>7:45 AM</strong> <span class="label label-important">Full</span> </label>
           <label class="radio south-pickup pickup hide">
-          <input type="radio" name="depart" id="optionsRadios2" value="option2">
+          <input type="radio" name="depart" value="8:00">
           <strong>8:00 AM</strong> <span class="label label-success">Available</span> </label>
         </div>
       </div>
       </fieldset>
       <hr />
       <fieldset>
-      <h3>Afternoon Bus</h3>
+      <h3>Planned Afternoon Bus</h3>
       <div class="control-group" style="margin-top:20px;">
         <label class="control-label">Departure Time</label>
         <div class="controls">
           <label class="radio pickup">
-          <input type="radio" name="return" id="optionsRadios1" value="option1" checked="checked">
+          <input type="radio" name="return" value="4:00" checked="checked">
           <strong>4:00 PM</strong></strong> <span class="label label-success">Available</span> </label>
           <label class="radio pickup">
-          <input type="radio" name="return" id="optionsRadios2" value="option2">
-          <strong>4:00 PM</strong> <span class="label label-success">Available</span> </label>
+          <input type="radio" name="return" value="5:15">
+          <strong>5:15 PM</strong> <span class="label label-success">Available</span> </label>
         </div>
       </div>
       </fieldset>
       <hr />
       <div class="">
-        <button type="submit" class="btn btn-large btn-inverse">Save Schedule</button>
+        <button type="submit" class="btn btn-large btn-inverse">Check-In</button>
       </div>
     </form>
   </div>
@@ -132,14 +132,7 @@ $(document).ready(function()
   <form class="form-vertical" action="/shuttle#admin" method="post">
     <div class="well">
       <h3>Create a New Shuttle</h3>
-      <div class="control-group" style="margin-top:10px;">
-        <div class="control-label">
-          <label for="capacity">Capacity</label>
-        </div>
-        <div class="controls">
-          <input type="text" name="capacity" id="capacity" />
-        </div>
-      </div>
+      
       
       <div class="control-group" style="margin-top:10px;">
         <div class="control-label">
@@ -147,6 +140,14 @@ $(document).ready(function()
         </div>
         <div class="controls">
           <input type="text" name="name" id="shuttle-name" />
+        </div>
+      </div>
+      <div class="control-group" style="margin-top:10px;">
+        <div class="control-label">
+          <label for="capacity">Capacity</label>
+        </div>
+        <div class="controls">
+          <input type="text" name="capacity" id="capacity" />
         </div>
       </div>
       <hr />
