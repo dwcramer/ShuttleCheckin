@@ -4,7 +4,7 @@ ShuttleCheckIn
 Vision
 ======
 
-    Leave no Racker behind when the shuttle departs
+    No Racker Left Behind
     Ensure on-time shuttle departure
     Allow easy changes of shuttle rider preferences
     Collect data about shuttle usage patterns
