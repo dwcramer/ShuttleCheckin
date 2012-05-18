@@ -1,5 +1,7 @@
 .idea/
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
+.Python
+bin/
+include/
+lib/
+shuttle.db
+*.pyc
