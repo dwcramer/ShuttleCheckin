@@ -9,7 +9,7 @@ from flask import escape
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////shuttle.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shuttle.db'
 db = SQLAlchemy(app)
 
 class Shuttle(db.Model):
