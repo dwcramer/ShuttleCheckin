@@ -1,16 +1,124 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>No Racker Left Behind</title>
-    <link href="/static/bootstrap.min.css" rel="stylesheet">
+<title>No Racker Left Behind</title>
+<link href="/static/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	$("#primary-nav li a").click(function()
+	{
+		$(this).closest("li").addClass('active').siblings('.active').removeClass('active');
+		$('.section').hide();
+		$("#"+$(this).attr('alt')).show();
+	});
+	
+	$('.btn-group button').click(function()
+	{
+		$(this).addClass('btn-primary').siblings('.btn-primary').removeClass('btn-primary');
+	});
+	
+	$(".pickup-time").change(function()
+	{
+		var status = $(this).children("option:selected").attr('alt');
+		var shuttle = $(this).children("option:selected").attr('data-shuttle');
+		
+		$("#leg-status").text(status);
+		
+		if(status == 'available')
+		{
+			$("#leg-status").addClass('label-success');
+		}
+		else
+		{
+			$("#leg-status").addClass('label-important');
+		}
+	});
+});
+
+</script>
 </head>
 <body>
-<p>This is the Racker shuttle app.<p/>
-<p/>
-<p>Welcome {{username}}<p/>
-<br/>
-Add more content here... :)
+
+
+
+
+
+<div class="navbar" style="margin-bottom:0;" id="primary-nav">
+  <div class="navbar-inner">
+    <div class="container">
+      <ul class="nav">
+        <li class="active"> <a href="javascript:void(0);" alt="today">Today</a> </li>
+        <li><a href="javascript:void(0);" alt="history">History</a></li>
+        <li><a href="javascript:void(0);" alt="admin">Shuttle Admin</a></li>
+        <li><a href="/logout">Log Out {{username}}</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="section" id="today">
+
+  <form class="form-inline well">
+  
+    <fieldset style="margin-bottom:20px;">
+    <input type="text" class="" name="name" placeholder="Name">
+  	<input type="text" class="" name="phone" placeholder="Phone Number">
+    </fieldset>
+    
+    <fieldset>
+    <legend>Morning Bus</legend>
+    	<div class="control-group">
+            <label class="control-label" for="select01">Leave From:</label>
+            <div class="btn-group">
+              <button class="btn btn-primary" onClick="$('.south-pickup').hide();$('.north-pickup').show();">Austin Office</button>
+              <button class="btn" onClick="$('.north-pickup').hide();$('.south-pickup').show();">Southpark Meadows</button>
+            </div>
+          </div>
+          
+          <div class="control-group">
+          	<label class="control-label" for="select01">Departure Time:</label>
+            <div class="controls">
+            <select class="input-small north-pickup pickup-time">
+            	<option value="7:15" data-shuttle="1" alt="available">7:15 AM</option>
+                <option value="7:30" data-shuttle="2" alt="full">7:30 AM</option>
+            </select>
+           
+            <select class="input-small hide south-pickup pickup-time">
+            	<option value="7:45" data-shuttle="1" alt="full">7:45 AM</option>
+                <option value="8:00" data-shuttle="2" alt="available">8:00 AM</option>
+            </select>
+            
+            <span class="label" id="leg-status" style="text-transform:capitalize;">Available</span>
+            </div>
+          </div>
+    </fieldset>
+    
+    <fieldset>
+    <legend>Afternoon Bus</legend>
+    </fieldset>
+  
+    <div class="">
+            <button type="submit" class="btn btn-large btn-inverse">Save Schedule</button>
+          </div>
+  </form>
+</div>
+
+
+<div class="section hide" id="admin">
+<p>Add a new shuttle to the database:</p>
+    <form action="/shuttle" method="post">
+        <p>Capacity <input type=text name=capacity>
+        <p>Name <input type=text name=name>
+        <p><input type=submit value="Create Shuttle">
+    </form>
+    
+    
 {% if shuttles %}
 <p>list of shuttles to take</p>
 
@@ -28,17 +136,7 @@ Add more content here... :)
     {% endif %}
 
 </table>
+</div>
 
-<br/>
-
-<p>Add a new shuttle to the database:</p>
-    <form action="/shuttle" method="post">
-        <p>Capacity <input type=text name=capacity>
-        <p>Name <input type=text name=name>
-        <p><input type=submit value="Create Shuttle">
-    </form>
-
-<br/>
-<a href="/logout">Logout</a>
 </body>
 </html>
