@@ -34,6 +34,7 @@ class ShuttleLeg(db.Model):
     destination = db.Column(db.String(50), nullable=False)
     depart_time = db.Column(db.DateTime, nullable=False)
     arrive_time = db.Column(db.DateTime, nullable=False)
+    week_day = db.Column(db.Integer, nullable=False)
 
     shuttle_id = db.Column(db.Integer, db.ForeignKey('shuttle.id'))
     shuttle = db.relationship('Shuttle',
