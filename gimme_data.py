@@ -1,2 +1,0 @@
-from shuttle import db
-
