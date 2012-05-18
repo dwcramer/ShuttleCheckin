@@ -11,11 +11,33 @@
 <p>Welcome {{username}}<p/>
 <br/>
 Add more content here... :)
+{% if shuttles %}
 <p>list of shuttles to take</p>
-{% for shuttle in shuttles %}
-    <div class=flash>{{ shuttle }}</div>
-{% endfor %}
+
+<table border="1">
+    <tr class=flash>
+        <td>name</td>
+        <td>capacity</td>
+    </tr>
+    {% for shuttle in shuttles %}
+    <tr class=flash>
+        <td>{{ shuttle.name }}</td>
+        <td>{{ shuttle.capacity }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+
+</table>
+
 <br/>
+
+<p>Add a new shuttle to the database:</p>
+    <form action="/shuttle" method="post">
+        <p>Capacity <input type=text name=capacity>
+        <p>Name <input type=text name=name>
+        <p><input type=submit value="Create Shuttle">
+    </form>
+
 <br/>
 <a href="/logout">Logout</a>
 </body>

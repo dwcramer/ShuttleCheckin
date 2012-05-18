@@ -86,10 +86,15 @@ def check_ins(shuttle):
 @app.route('/shuttle', methods=['GET', 'POST'])
 def shuttle():
     if request.method == 'POST':
-        return "(posting data) %s" % request
+        capacity = request.form['capacity']
+        name = request.form['name']
+        shuttle = Shuttle(capacity, name)
+        db.session.add(shuttle)
+        db.session.commit()
+        return redirect(url_for('shuttle'))
     else:
         # get list of shuttles to signup for
-        shuttles = ['shuttle 1', 'shuttle 2', 'shuttle 3']
+        shuttles = Shuttle.query.all()
         return render_template('shuttle.html', shuttles=shuttles)
 
 
