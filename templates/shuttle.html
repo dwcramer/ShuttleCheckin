@@ -58,8 +58,7 @@ $(document).ready(function()
     <div class="container">
       <ul class="nav">
         <li class="active"> <a href="#today" alt="today">Today</a> </li>
-        <li><a href="#history" alt="history">History</a></li>
-        <li><a href="#admin" alt="admin">Shuttle Admin</a></li>
+        <li><a href="/driver" alt="driver">Driver</a></li>
         <li><a href="/logout">Log Out {{username}}</a></li>
       </ul>
     </div>
@@ -67,14 +66,14 @@ $(document).ready(function()
 </div>
 <div class="section row-fluid" id="today">
   <div class="span12">
-    <form class="form-vertical">
+    <form class="form-vertical" action="/checkins" method="post">
       <div class="well">
       <fieldset>
       <div class="controls">
-        <input type="text" class="" name="name" placeholder="Name">
+        <input type="text" class="" name="name" value="{{racker.name}}" placeholder="Name">
       </div>
       <div class="controls">
-        <input type="text" class="" name="phone" placeholder="Phone Number">
+        <input type="text" class="" name="phone" value="{{racker.phone}}" placeholder="Phone Number">
       </div>
       </fieldset>
       <hr />
@@ -90,33 +89,33 @@ $(document).ready(function()
       <div class="control-group" style="margin-top:20px;">
         <label class="control-label">Departure Time</label>
         <div class="controls">
-          <label class="radio north-pickup pickup">
-          <input type="radio" name="depart" value="7:15" checked="checked">
-          <strong>7:15 AM</strong></strong> <span class="label label-success">Available</span> </label>
-          <label class="radio north-pickup pickup">
-          <input type="radio" name="depart" value="7:30">
-          <strong>7:30 AM</strong> <span class="label label-success">Available</span> </label>
-          <label class="radio south-pickup pickup hide">
-          <input type="radio" name="depart" value="7:45">
-          <strong>7:45 AM</strong> <span class="label label-important">Full</span> </label>
-          <label class="radio south-pickup pickup hide">
-          <input type="radio" name="depart" value="8:00">
-          <strong>8:00 AM</strong> <span class="label label-success">Available</span> </label>
+          {% for castleShuttle in to_san %}
+	          {% if castleShuttle.origin == 'Austin Office' or castleShuttle.origin == 'Castle'%}
+	          <label class="radio north-pickup pickup">
+	          <input type="radio" name="depart" value="{{ castleShuttle.id }}" checked="checked">
+	          <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalCheckin}})</strong></strong> <span class="label label-success">Available</span> </label>
+	          {% elif castleShuttle.origin == 'Southpark Meadows'%}
+	          <label class="radio south-pickup pickup hide">
+	          <input type="radio" name="depart" value="{{ castleShuttle.id }}">
+	          <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalCheckin}})</strong> <span class="label label-important">Full</span> </label>
+	          {% endif %}
+        {% endfor %}
         </div>
       </div>
       </fieldset>
       <hr />
       <fieldset>
-      <h3>Planned Afternoon Bus</h3>
+      <h3>Planned Evening Bus</h3>
       <div class="control-group" style="margin-top:20px;">
         <label class="control-label">Departure Time</label>
         <div class="controls">
+          {% for castleShuttle in to_san %}
+          {% if castleShuttle.origin == 'Castle' %}
           <label class="radio pickup">
-          <input type="radio" name="return" value="4:00" checked="checked">
-          <strong>4:00 PM</strong></strong> <span class="label label-success">Available</span> </label>
-          <label class="radio pickup">
-          <input type="radio" name="return" value="5:15">
-          <strong>5:15 PM</strong> <span class="label label-success">Available</span> </label>
+          <input type="radio" name="return" value="{{ castleShuttle.id }}" checked="checked">
+          <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalReserves}})</strong></strong> <span class="label label-success">Available</span> </label>
+          {% endif %}
+          {% endfor %}
         </div>
       </div>
       </fieldset>
@@ -125,57 +124,6 @@ $(document).ready(function()
         <button type="submit" class="btn btn-large btn-inverse">Check-In</button>
       </div>
     </form>
-  </div>
-</div>
-</div>
-<div class="section row-fluid hide" id="admin">
-  <form class="form-vertical" action="/shuttle#admin" method="post">
-    <div class="well">
-      <h3>Create a New Shuttle</h3>
-      
-      
-      <div class="control-group" style="margin-top:10px;">
-        <div class="control-label">
-          <label for="capacity">Shuttle Name</label>
-        </div>
-        <div class="controls">
-          <input type="text" name="name" id="shuttle-name" />
-        </div>
-      </div>
-      <div class="control-group" style="margin-top:10px;">
-        <div class="control-label">
-          <label for="capacity">Capacity</label>
-        </div>
-        <div class="controls">
-          <input type="text" name="capacity" id="capacity" />
-        </div>
-      </div>
-      <hr />
-        <button type="submit" class="btn btn-large btn-inverse">Create Shuttle</button>
-    </div>
-  </form>
-  {% if shuttles %}
-  <div class="well">
-  <h2>
-    list of shuttles to take
-  </h2>
-  <table class="table table-bordered table-striped table-condensed">
-  <thead>
-    <tr class=flash>
-      <th>Shuttle Name</th>
-      <th>Capacity</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for shuttle in shuttles %}
-    <tr class=flash>
-      <td>{{ shuttle.name }}</td>
-      <td>{{ shuttle.capacity }}</td>
-    </tr>
-    {% endfor %}
-    {% endif %}
-    </tbody>
-  </table>
   </div>
 </div>
 </div>
