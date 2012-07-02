@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>No Racker Left Behind</title>
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function()
+        {
+            var theHash = window.location.hash;
+            var hash = theHash.substring(1);
+
+            if(hash != "")
+            {
+                $(".section").hide();
+                $("#"+hash).show();
+
+                jQuery.each($(".navbar li"),function()
+                {
+                    if(hash == $(this).children("a").attr("alt"))
+                    {
+                        $(this).addClass("active").siblings('.active').removeClass('active');
+                    }
+                })
+            }
+
+
+            $("#primary-nav li a").click(function()
+            {
+                $(this).closest("li").addClass('active').siblings('.active').removeClass('active');
+                $('.section').hide();
+                $("#"+$(this).attr('alt')).show();
+            });
+
+            $('.btn-group button').click(function()
+            {
+                $(this).addClass('btn-primary').siblings('.btn-primary').removeClass('btn-primary');
+            });
+
+
+        });
+
+    </script>
+    <style type="text/css">
+        .pickup
+        {
+            margin-bottom:10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="navbar" style="margin-bottom:0;" id="primary-nav">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav">
+                    <li class="active"> <a href="#today" alt="today">Today</a> </li>
+                    <li><a href="/logout">Log Out {{username}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="section row-fluid" id="today">
+        <div class="span12">
+            <form class="form-vertical" action="/driver" method="post">
+                <div class="well">
+                    <fieldset>
+                        <div class="control-group" style="margin-top:20px;">
+                            <label class="control-label">Departure Time</label>
+                            <div class="controls">
+                                {% for trip in currenttrip %}
+                                <label class="radio north-pickup pickup">
+                                    <input type="radio" name="depart" value="{{ trip.id }}">
+                                    <strong>{{ trip.tripconfig.name }}</strong></label>
+        			            {% endfor %}
+                            </div>
+                            <div>
+                            	<table border="1">
+   									<tr class=flash><td>Reserved</td></tr>
+                                	{% for rackerReserve in rackerReserves %}
+                                	<tr>
+                                		<td>{{ rackerReserve.racker.name}}</td>
+                                		<td>{{ rackerReserve.racker.phone}}</td>
+                                	</tr>
+       			            		{% endfor %}
+       			            		<tr class=flash><td>Checkin</td></tr>
+                                	{% for rackerCheckin in rackerCheckins %}
+                                	<tr>
+                                		<td>{{ rackerCheckin.racker.name}}</td>
+                                		<td>{{ rackerCheckin.racker.phone}}</td>
+                                	</tr>
+       			            		{% endfor %}
+                            	</table>
+                             </div>
+                        </div>
+                    </fieldset>
+                    <div class="">
+                        <button type="submit" class="btn btn-large btn-inverse">List</button>
+                    </div>
+            	</div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
