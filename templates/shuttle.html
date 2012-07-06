@@ -110,7 +110,7 @@ $(document).ready(function()
         <label class="control-label">Departure Time</label>
         <div class="controls">
           {% for castleShuttle in to_san %}
-          {% if castleShuttle.origin == 'Castle' %}
+          {% if castleShuttle.returnTrip == 'True' %}
           <label class="radio pickup">
           <input type="radio" name="return" value="{{ castleShuttle.id }}" checked="checked">
           <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalReserves}})</strong></strong> <span class="label label-success">Available</span> </label>

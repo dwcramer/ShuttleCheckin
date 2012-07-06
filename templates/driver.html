@@ -12,7 +12,9 @@
         {
             var theHash = window.location.hash;
             var hash = theHash.substring(1);
-
+			
+            $(".stripMe tr:even").addClass("alt");
+            
             if(hash != "")
             {
                 $(".section").hide();
@@ -39,8 +41,7 @@
             {
                 $(this).addClass('btn-primary').siblings('.btn-primary').removeClass('btn-primary');
             });
-
-
+			
         });
 
     </script>
@@ -48,6 +49,9 @@
         .pickup
         {
             margin-bottom:10px;
+        }
+        tr.alt td{
+        	background:#99CCFF;
         }
     </style>
 </head>
@@ -79,19 +83,20 @@
         			            {% endfor %}
                             </div>
                             <div>
-                            	<table border="1">
-   									<tr class=flash><td>Reserved</td></tr>
+                            	<table class="stripMe" border="1">
+   									<tr class=flash><th>Name</th><th>Phone</th><th>Checked In?</th></tr>
                                 	{% for rackerReserve in rackerReserves %}
                                 	<tr>
                                 		<td>{{ rackerReserve.racker.name}}</td>
                                 		<td>{{ rackerReserve.racker.phone}}</td>
+                                		<td>No</td>
                                 	</tr>
        			            		{% endfor %}
-       			            		<tr class=flash><td>Checkin</td></tr>
-                                	{% for rackerCheckin in rackerCheckins %}
+       			            		{% for rackerCheckin in rackerCheckins %}
                                 	<tr>
                                 		<td>{{ rackerCheckin.racker.name}}</td>
                                 		<td>{{ rackerCheckin.racker.phone}}</td>
+                                		<td>Yes</td>
                                 	</tr>
        			            		{% endfor %}
                             	</table>

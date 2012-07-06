@@ -34,13 +34,17 @@ class Tripconfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     week_day = db.Column(db.Integer, nullable=False)
+    returnTrip = db.Column(db.String(5), nullable=True)
+    
     shuttle_id = db.Column(db.Integer, db.ForeignKey('shuttle.id'))
     shuttle = db.relationship('Shuttle')
     pickuppoint = db.relationship("Pickuppoint", backref='pickuppoint')
    
-    def __init__(self, name,week_day,shuttle):
+    def __init__(self, name,week_day,returnTrip,shuttle):
         self.name = name
         self.week_day=week_day
+        self.returnTrip=returnTrip
+        
         self.shuttle=shuttle
 
 class Pickuppoint(db.Model):
@@ -49,7 +53,7 @@ class Pickuppoint(db.Model):
     depart_time = db.Column(db.Integer, nullable=False)
 
     tripconfig_id = db.Column(db.Integer, db.ForeignKey('tripconfig.id'))
-    tripconfig = db.relationship('Tripconfig',)
+    tripconfig = db.relationship('Tripconfig')
 
     def __init__(self, origin, depart_time, tripconfig):
         self.origin=origin
@@ -105,13 +109,14 @@ class Rackerreserve(db.Model):
         self.racker = racker
 
 class ShuttleView():
-    def __init__(self,totalCheckin, totalReserves, capacity,departtime,origin,id):
+    def __init__(self,totalCheckin, totalReserves, capacity,departtime,origin,id,returnTrip):
         self.totalCheckin = totalCheckin
         self.totalReserves = totalReserves
         self.capacity = capacity
         self.departtime = departtime
         self.origin = origin
         self.id = id
+        self.returnTrip = returnTrip
         return
     
 class TestClass():
@@ -201,7 +206,7 @@ def index():
             totalReserves = len(rackerreserves)
             pickuppoint = currenttripid[f].tripconfig.pickuppoint
             for g in range(0, len(pickuppoint)):
-                to_san.append(ShuttleView(totalCheckin,totalReserves, capacity,pickuppoint[g].depart_time,pickuppoint[g].origin,currenttripid[f].id))
+                to_san.append(ShuttleView(totalCheckin,totalReserves, capacity,pickuppoint[g].depart_time,pickuppoint[g].origin,currenttripid[f].id,pickuppoint[g].tripconfig.returnTrip))
         return render_template('shuttle.html', racker=racker, to_san=to_san)
     return redirect(url_for('login'))
 
@@ -235,11 +240,22 @@ def driver():
     if request.method == 'GET':
         return render_template('driver.html', currenttrip=currenttrip)
 
+# A better way would be to get the list of racker who reserved but have checked in already by sql instead of data manipulation in python code
     if request.method == 'POST':    
         currenttrip_id = request.form['depart']
         rackerReserve = Rackerreserve.query.filter_by(currenttrip_id=currenttrip_id).all()
         rackerCheckin = Rackercheckin.query.filter_by(currenttrip_id=currenttrip_id).all()
-        return render_template('driver.html',currenttrip=currenttrip, rackerReserves=rackerReserve,rackerCheckins=rackerCheckin)
+        checkedInList = []
+        reserveFilteredList = []
+        
+        for racker in rackerCheckin:
+            checkedInList.append(racker.racker_id)
+            
+        for racker in rackerReserve:
+            if racker.racker_id not in checkedInList:
+                reserveFilteredList.append(racker)
+                
+        return render_template('driver.html',currenttrip=currenttrip, rackerReserves=reserveFilteredList,rackerCheckins=rackerCheckin)
 
 class RackerList():
     def __init__(self,name,phone,status):
