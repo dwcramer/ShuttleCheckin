@@ -53,6 +53,10 @@
         tr.alt td{
         	background:#99CCFF;
         }
+        .flash
+        {
+        	background:#009CEB;
+        }
     </style>
 </head>
 <body>
@@ -61,7 +65,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <ul class="nav">
-                    <li><a href="/today" alt="today">Today</a> </li>
+                    <li><a href="/main" alt="today">Today</a> </li>
                     <li class="active"><a href="/#driver" alt="driver">Driver</a></li>
                     <li><a href="/logout">Log Out {{username}}</a></li>
                 </ul>
@@ -73,14 +77,15 @@
             <form class="form-vertical" action="/driver" method="post">
                 <div class="well">
                     <fieldset>
-                        <div class="control-group" style="margin-top:20px;">
-                            <label class="control-label">Departure Time</label>
+<!--                         <div class="control-group" style="margin-top:20px;">
+                             <label class="control-label">Departure Time</label>-->
                             <div class="controls">
+                                <select name='depart'>
                                 {% for trip in currenttrip %}
                                 <label class="radio north-pickup pickup">
-                                    <input type="radio" name="depart" value="{{ trip.id }}">
-                                    <strong>{{ trip.tripconfig.name }}</strong></label>
+                                    <option value="{{ trip.id }}">{{ trip.tripconfig.name }}</option>
         			            {% endfor %}
+        			            </select>
                             </div>
                             <div>
                             	<table class="stripMe" border="1">
@@ -89,7 +94,7 @@
                                 	<tr>
                                 		<td>{{ rackerReserve.racker.name}}</td>
                                 		<td>{{ rackerReserve.racker.phone}}</td>
-                                		<td>No</td>
+                                		<td>No <button type="submit" name='bSubmit' value="{{ rackerReserve.racker.id }}" class="btn btn-large btn-inverse">Check-In</button></td>
                                 	</tr>
        			            		{% endfor %}
        			            		{% for rackerCheckin in rackerCheckins %}
@@ -101,10 +106,10 @@
        			            		{% endfor %}
                             	</table>
                              </div>
-                        </div>
+                      <!--   </div>  -->
                     </fieldset>
                     <div class="">
-                        <button type="submit" class="btn btn-large btn-inverse">List</button>
+                        <button type="submit" name='bSubmit' value='listCheckin' class="btn btn-large btn-inverse">List</button>
                     </div>
             	</div>
             </form>

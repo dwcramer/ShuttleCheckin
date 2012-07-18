@@ -92,9 +92,9 @@ class Rackercheckin(db.Model):
     racker_id = db.Column(db.Integer,db.ForeignKey('racker.id'))
     racker =  db.relationship('Racker')
 
-    def __init__(self, currenttrip_id, racker):
+    def __init__(self, currenttrip_id, racker_id):
         self.currenttrip_id = currenttrip_id
-        self.racker = racker
+        self.racker_id = racker_id
 
 class Rackerreserve(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -151,10 +151,9 @@ def check_ins():
         checkInShuttleId = request.form['depart']
         reserveShuttleId = request.form['return']
 
-        currentCheckin = Rackercheckin(checkInShuttleId,racker)
+        currentCheckin = Rackercheckin(checkInShuttleId,racker.id)
             
         db.session.add(currentCheckin)
-        db.session.commit
 #    The call below should be removed. The current trip ids could be saved in the database and should not be queried every time
         currenttripid = Currenttrip.query.filter_by(date=date.today()).all()
         
@@ -183,6 +182,7 @@ def check_ins():
         return render_template('checkin.html', shuttle=shuttle)
 
 @app.route('/')
+@app.route('/main',methods=['GET'])
 def index():
     if 'username' in session:
         username = escape(session['username'])
@@ -198,6 +198,7 @@ def index():
 
         currenttripid = Currenttrip.query.filter_by(date=date.today()).all()
         to_san = []
+#        currentTime = datetime
         for f in range(0,len(currenttripid)):
             capacity = currenttripid[f].tripconfig.shuttle.capacity
             rackercheckin = currenttripid[f].rackercheckin
@@ -242,21 +243,47 @@ def driver():
 
 # A better way would be to get the list of racker who reserved but have checked in already by sql instead of data manipulation in python code
     if request.method == 'POST':    
-        currenttrip_id = request.form['depart']
-        rackerReserve = Rackerreserve.query.filter_by(currenttrip_id=currenttrip_id).all()
-        rackerCheckin = Rackercheckin.query.filter_by(currenttrip_id=currenttrip_id).all()
-        checkedInList = []
-        reserveFilteredList = []
+        action = request.form['bSubmit']
+        if action == 'listCheckin':
+            currenttrip_id = request.form['depart']
+            session['currenttripId']=currenttrip_id
+        else:
+# The rackerId is part of the submit button value
+            currenttrip_id = session['currenttripId']
+            rackerCheckin = Rackercheckin(currenttrip_id,action)
+            db.session.add(rackerCheckin)
+            db.session.commit()
         
-        for racker in rackerCheckin:
-            checkedInList.append(racker.racker_id)
-            
-        for racker in rackerReserve:
-            if racker.racker_id not in checkedInList:
-                reserveFilteredList.append(racker)
-                
-        return render_template('driver.html',currenttrip=currenttrip, rackerReserves=reserveFilteredList,rackerCheckins=rackerCheckin)
+    rackerReserve = Rackerreserve.query.filter_by(currenttrip_id=currenttrip_id).all()
+    rackerCheckin = Rackercheckin.query.filter_by(currenttrip_id=currenttrip_id).all()
+    checkedInList = []
+    reserveFilteredList = []
+    
+    for racker in rackerCheckin:
+        checkedInList.append(racker.racker_id)
+    
+    for racker in rackerReserve:
+        if racker.racker_id not in checkedInList:
+            reserveFilteredList.append(racker)
+    
+    return render_template('driver.html',currenttrip=currenttrip, rackerReserves=reserveFilteredList,rackerCheckins=rackerCheckin)
 
+  
+def rackerList(currenttrip_id,currenttrip):
+    rackerReserve = Rackerreserve.query.filter_by(currenttrip_id=currenttrip_id).all()
+    rackerCheckin = Rackercheckin.query.filter_by(currenttrip_id=currenttrip_id).all()
+    checkedInList = []
+    reserveFilteredList = []
+    
+    for racker in rackerCheckin:
+        checkedInList.append(racker.racker_id)
+    
+    for racker in rackerReserve:
+        if racker.racker_id not in checkedInList:
+            reserveFilteredList.append(racker)
+    
+    return render_template('driver.html',currenttrip=currenttrip, rackerReserves=reserveFilteredList,rackerCheckins=rackerCheckin)
+    
 class RackerList():
     def __init__(self,name,phone,status):
         self.name = name

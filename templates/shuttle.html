@@ -92,7 +92,7 @@ $(document).ready(function()
           {% for castleShuttle in to_san %}
 	          {% if castleShuttle.origin == 'Austin Office' or castleShuttle.origin == 'Castle'%}
 	          <label class="radio north-pickup pickup">
-	          <input type="radio" name="depart" value="{{ castleShuttle.id }}" checked="checked">
+	          <input type="radio" name="depart" value="{{ castleShuttle.id }}">
 	          <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalCheckin}})</strong></strong> <span class="label label-success">Available</span> </label>
 	          {% elif castleShuttle.origin == 'Southpark Meadows'%}
 	          <label class="radio south-pickup pickup hide">
@@ -112,7 +112,7 @@ $(document).ready(function()
           {% for castleShuttle in to_san %}
           {% if castleShuttle.returnTrip == 'True' %}
           <label class="radio pickup">
-          <input type="radio" name="return" value="{{ castleShuttle.id }}" checked="checked">
+          <input type="radio" name="return" value="{{ castleShuttle.id }}">
           <strong>{{ castleShuttle.departtime }} (Seats Available : {{ castleShuttle.capacity - castleShuttle.totalReserves}})</strong></strong> <span class="label label-success">Available</span> </label>
           {% endif %}
           {% endfor %}
