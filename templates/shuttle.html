@@ -78,7 +78,7 @@ $(document).ready(function()
       </fieldset>
       <hr />
       <fieldset>
-      <h3>Morning Bus</h3>
+      <h3>Check In</h3>
       <div class="control-group" style="margin-top:10px;">
         <label class="control-label" for="select01">Leave From</label>
         <div class="btn-group">
@@ -87,7 +87,6 @@ $(document).ready(function()
         </div>
       </div>
       <div class="control-group" style="margin-top:20px;">
-        <label class="control-label">Departure Time</label>
         <div class="controls">
           {% for castleShuttle in to_san %}
 	          {% if castleShuttle.origin == 'Austin Office' or castleShuttle.origin == 'Castle'%}
@@ -105,9 +104,8 @@ $(document).ready(function()
       </fieldset>
       <hr />
       <fieldset>
-      <h3>Planned Evening Bus</h3>
+      <h3>Return Shuttle</h3>
       <div class="control-group" style="margin-top:20px;">
-        <label class="control-label">Departure Time</label>
         <div class="controls">
           {% for castleShuttle in to_san %}
           {% if castleShuttle.returnTrip == 'True' %}
@@ -121,7 +119,7 @@ $(document).ready(function()
       </fieldset>
       <hr />
       <div class="">
-        <button type="submit" class="btn btn-large btn-inverse">Check-In</button>
+        <button type="submit" class="btn btn-large btn-inverse">Submit</button>
       </div>
     </form>
   </div>
